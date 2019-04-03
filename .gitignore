@@ -1,0 +1,5 @@
+node_modules/
+dist/
+test/
+manufacturer-network@0.0.1.bna
+package-lock.json
