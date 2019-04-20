@@ -1,49 +1,66 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * Write your model definitions here
- */
-
 namespace org.manufacturer.network
 
-asset Car identified by carID {
-  o String carID
+concept GeneralDetails {
   o String name
+  o String email optional
+  o Integer pincode optional
+}
+
+enum VehicleColor {
+  o Red
+  o White
+  o Black
+}
+
+enum VehicleModel {
+  o ModelA
+  o ModelB
+  o ModelC
+}
+
+enum ShowroomStatus {
+  o COMPANYOWNED
+  o FRANCHISE
+}
+
+asset Vehicle identified by vin {
+  o String vin
+  o VehicleModel model
+  o VehicleColor color
   --> Showroom showroom
   --> Owner owner
 }
 
-participant Showroom identified by showroomID{
-  o String showroomID
-  o String[] car
-  o String name
+asset Order identified by orderId {
+  o String orderId
+  --> Vehicle vehicle
 }
 
-participant Owner identified by ownerID{
-  o String ownerID
-  o String firstName
-  o String lastName
+participant Showroom identified by showroomId {
+  o String showroomId
+  o GeneralDetails details
+  o ShowroomStatus status 
+  o String[] vehicles
 }
 
-transaction Allocate{
-  --> Car car
-  --> Showroom newShowroom
+participant Owner identified by ownerId {
+  o String ownerId
+  o GeneralDetails details
 }
 
-transaction Purchase{
-  --> Car car
+event OrderPlacedEvent {
+  o String orderId
+  --> Vehicle vehicle
+  --> Owner owner
+}
+
+transaction Allocate {
   --> Showroom showroom
-  --> Owner newOwner
+  --> Vehicle vehicle 
+}
+
+transaction OrderPlaced {
+  o String orderId
+  --> Vehicle vehicle
+  --> Owner owner
 }
